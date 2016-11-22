@@ -34,11 +34,14 @@ def crowl(url = 'https://www.cbr.ru/region/'):
 
 	return res
 
-def parse(url):
+def koif_by_month(year = 2013, region = 'VORO'):
+
+	url = 'https://www.cbr.ru/region/IndicatorTable?region=%s&indicator=Table1.2&year=%s' % (year, region)
+
 	res = dict()
 	soup = BeautifulSoup(requests.get(url).content)
 	for td in soup.findAll('td'):
-		if td.text == '01.01.2013': # TODO : get from URL
+		if td.text == '01.01.%s' % (year):
 			break
 
 	table = td.parent.parent
