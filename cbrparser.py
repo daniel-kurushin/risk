@@ -35,8 +35,8 @@ def crowl(url = 'https://www.cbr.ru/region/'):
 	return res
 
 def koif_by_month(year = 2013, region = 'VORO'):
-
-	url = 'https://www.cbr.ru/region/IndicatorTable?region=%s&indicator=Table1.2&year=%s' % (year, region)
+	""" Kоличество действующих кредитных организаций и их филиалов """
+	url = 'https://www.cbr.ru/region/IndicatorTable?region=%s&indicator=Table1.2&year=%s' % (region, year)
 
 	res = dict()
 	soup = BeautifulSoup(requests.get(url).content)
@@ -52,6 +52,10 @@ def koif_by_month(year = 2013, region = 'VORO'):
 			n2 = tr('td')[2].nobr.contents[0]
 			n3 = tr('td')[3].nobr.contents[0]
 			n4 = tr('td')[4].nobr.contents[0]
+			try:
+				n2 = int(n2)
+			except ValueError:
+				n2 = int(n3) + int(n4)
 			res.update({
 			_date:{
 			'Kоличество кредитных органзаций в регионе': n1,
@@ -64,8 +68,43 @@ def koif_by_month(year = 2013, region = 'VORO'):
 			print(e)
 	return res
 
+
+def krob_by_month(year = 2013, region = 'VORO'):
+	""" Данные об объеме кредитов, депозитов и прочих размещенных средств в рублях """
+	url = 'https://www.cbr.ru/region/IndicatorTable?region=%s&indicator=Tab28.2&year=%s' % (region, year)
+
+	res = dict()
+	soup = BeautifulSoup(requests.get(url).content)
+	for td in soup.findAll('td'):
+		if td.text == '01.01.%s' % (year):
+			break
+
+	table = td.parent.parent
+	for tr in table('tr'):
+		try:
+			_date = tr('td')[0].contents[0]
+			n1 = int(tr('td')[1].nobr.contents[0].replace(' ',''))
+			n2 = int(tr('td')[2].nobr.contents[0].replace(' ',''))
+			n3 = int(tr('td')[3].nobr.contents[0].replace(' ',''))
+			n4 = int(tr('td')[4].nobr.contents[0].replace(' ',''))
+			res.update({
+			_date:{
+			'Объем кредитов': n1,
+			'Кредиты нефинансовым организациям': n2,
+			'Кредиты кредитным организациям': n3,
+			'Кредиты физическим лицам': n4,
+			}})
+		except Exception as e:
+			print(e)
+	return res
+
+
 if __name__ == '__main__':
-	x = crowl('https://www.cbr.ru/region/')
-	# x = parse('https://www.cbr.ru/region/IndicatorTable?region=BELG&indicator=Table1.2&year=2013')
+	# x = crowl('https://www.cbr.ru/region/')
+	# x = koif_by_month(region='BELG', year='2013')
+	x = krob_by_month(region='BELG', year='2013')
 	print(dumps(x, ensure_ascii=0, indent=2))
+
+
+
 
