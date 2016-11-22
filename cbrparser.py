@@ -98,13 +98,41 @@ def krob_by_month(year = 2013, region = 'VORO'):
 			print(e)
 	return res
 
+def przd_by_month(year = 2013, region = 'VORO'):
+	""" Данные о просроченной задолженности по кредитам, депозитам и прочим размещенным средствам """
+	url = 'https://www.cbr.ru/region/IndicatorTable?region=%s&indicator=Tab30.2&year=%s' % (region, year)
+           
+	res = dict()
+	soup = BeautifulSoup(requests.get(url).content)
+	for td in soup.findAll('td'):
+		if td.text == '01.01.%s' % (year):
+			break
+
+	table = td.parent.parent
+	for tr in table('tr'):
+		try:
+			_date = tr('td')[0].contents[0]
+			n1 = int(tr('td')[1].nobr.contents[0].replace(' ',''))
+			n2 = int(tr('td')[3].nobr.contents[0].replace(' ',''))
+			n3 = int(tr('td')[5].nobr.contents[0].replace(' ',''))
+			n4 = n1 + n2 + n3
+			res.update({
+			_date:{
+			'Просроченная задолженность нефинансовых организаций': n1,
+			'Просроченная задолженность кредитных организаций': n2,
+			'Просроченная задолженность физических лиц': n3,
+			'Всего просроченная задолженность': n4,
+			}})
+		except Exception as e:
+			print(e)
+	return res
+
 
 if __name__ == '__main__':
 	# x = crowl('https://www.cbr.ru/region/')
 	# x = koif_by_month(region='BELG', year='2013')
-	x = krob_by_month(region='BELG', year='2013')
+	# x = krob_by_month(region='BELG', year='2013')
+	x = przd_by_month(region='BELG', year='2013')
 	print(dumps(x, ensure_ascii=0, indent=2))
-
-
 
 
