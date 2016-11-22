@@ -1,8 +1,38 @@
 # -*- coding: utf-8 -*-
 import requests
 import re
+import sys
 
 from bs4 import BeautifulSoup
+from json import dumps
+
+def crowl(url = 'https://www.cbr.ru/region/'):
+
+	def get_reg_name_code_from_ahref(a):
+		_name = a.contents[0]
+		try:
+			_code = re.search('region=(?P<code>.*?)($|&)',a['href']).group('code')
+		except AttributeError:
+			_code = ''
+		return(_name, _code)
+
+	res = dict()
+	soup = BeautifulSoup(requests.get(url).content)
+
+	for li in soup.find('ul', {"class" : "nodash without_dash regions_okrug"}).findAll('li',recursive=False):
+		regres = dict()
+		try:
+			for a in li.ul.findAll('a'):
+				_name, _code = get_reg_name_code_from_ahref(a)
+				print("         ", _name, file=sys.stderr)
+				regres.update({_code:{'name':_name}})
+			_name, _code = get_reg_name_code_from_ahref(li.a)
+			print(_name, file=sys.stderr)
+			res.update({_code:{'name':_name,'subs':regres}})
+		except AttributeError:
+			pass
+
+	return res
 
 def parse(url):
 	res = dict()
@@ -32,6 +62,7 @@ def parse(url):
 	return res
 
 if __name__ == '__main__':
-	x = parse('https://www.cbr.ru/region/IndicatorTable?region=BELG&indicator=Table1.2&year=2013')
-	print(x)
+	x = crowl('https://www.cbr.ru/region/')
+	# x = parse('https://www.cbr.ru/region/IndicatorTable?region=BELG&indicator=Table1.2&year=2013')
+	print(dumps(x, ensure_ascii=0, indent=2))
 
