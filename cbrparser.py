@@ -7,7 +7,8 @@ from bs4 import BeautifulSoup
 from json import dumps
 
 def crowl(url = 'https://www.cbr.ru/region/'):
-
+	""" коды регионов """
+	
 	def get_reg_name_code_from_ahref(a):
 		_name = a.contents[0]
 		try:
@@ -154,11 +155,11 @@ def frdko_by_month(year = 2013, region = 'VORO'):
 
 
 if __name__ == '__main__':
-	# x = crowl('https://www.cbr.ru/region/')
+	x = crowl('https://www.cbr.ru/region/')
 	# x = koif_by_month(region='BELG', year='2013')
 	# x = krob_by_month(region='BELG', year='2013')
 	# x = przd_by_month(region='BELG', year='2013')
-	x = frdko_by_month(region='BELG', year='2014')
+	# x = frdko_by_month(region='BELG', year='2014')
 	print(dumps(x, ensure_ascii=0, indent=2))
 
 
