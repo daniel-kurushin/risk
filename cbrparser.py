@@ -83,10 +83,10 @@ def krob_by_month(year = 2013, region = 'VORO'):
 	for tr in table('tr'):
 		try:
 			_date = tr('td')[0].contents[0]
-			n1 = int(tr('td')[1].nobr.contents[0].replace(' ',''))
-			n2 = int(tr('td')[2].nobr.contents[0].replace(' ',''))
-			n3 = int(tr('td')[3].nobr.contents[0].replace(' ',''))
-			n4 = int(tr('td')[4].nobr.contents[0].replace(' ',''))
+			n1 = int(tr('td')[1].nobr.contents[0].replace(' ','')) * 1000
+			n2 = int(tr('td')[2].nobr.contents[0].replace(' ','')) * 1000
+			n3 = int(tr('td')[3].nobr.contents[0].replace(' ','')) * 1000
+			n4 = int(tr('td')[4].nobr.contents[0].replace(' ','')) * 1000
 			res.update({
 			_date:{
 			'Объем кредитов': n1,
@@ -112,9 +112,9 @@ def przd_by_month(year = 2013, region = 'VORO'):
 	for tr in table('tr'):
 		try:
 			_date = tr('td')[0].contents[0]
-			n1 = int(tr('td')[1].nobr.contents[0].replace(' ',''))
-			n2 = int(tr('td')[3].nobr.contents[0].replace(' ',''))
-			n3 = int(tr('td')[5].nobr.contents[0].replace(' ',''))
+			n1 = int(tr('td')[1].nobr.contents[0].replace(' ','')) * 1000
+			n2 = int(tr('td')[3].nobr.contents[0].replace(' ','')) * 1000
+			n3 = int(tr('td')[5].nobr.contents[0].replace(' ','')) * 1000
 			n4 = n1 + n2 + n3
 			res.update({
 			_date:{
