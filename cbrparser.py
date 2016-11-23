@@ -151,15 +151,46 @@ def frdko_by_month(year = 2013, region = 'VORO'):
 			print(e)
 	return res
 
+def ostbs_by_month(year=2013):
+	from time import sleep
+	""" Сведения об остатках бюджетных средств на счетах кредитных организаций """
+	res = dict()
 
+	for month in range(1,13):
+		sleep(1)
+		url = 'https://www.cbr.ru/statistics/UDStat.aspx?Month=%s&Year=%s&TblID=302-25' % (month, year)
+		soup = BeautifulSoup(requests.get(url).content)
+		for td in soup.findAll('td'):
+			if td.text == 'РОССИЙСКАЯ ФЕДЕРАЦИЯ':
+				break
+
+		table = td.parent.parent
+		for tr in table('tr'):
+			try:
+				region = tr('td')[0].contents[0]
+				if region.upper() != region:
+					ostat  = int(
+						float(tr('td')[1].contents[0].replace(',','.').replace(' ','')) + 
+						float(tr('td')[2].contents[0].replace(',','.').replace(' ','')) + 
+						float(tr('td')[3].contents[0].replace(',','.').replace(' ','')) + 
+						float(tr('td')[4].contents[0].replace(',','.').replace(' ',''))
+					) * 1000000
+					_date = '01.%s.%s' % (month, year)
+					res.update({
+						region:{_date:ostat}
+					})
+			except Exception as e:
+				print(e)
+	return res
 
 
 if __name__ == '__main__':
-	x = crowl('https://www.cbr.ru/region/')
+	# x = crowl('https://www.cbr.ru/region/')
 	# x = koif_by_month(region='BELG', year='2013')
 	# x = krob_by_month(region='BELG', year='2013')
 	# x = przd_by_month(region='BELG', year='2013')
 	# x = frdko_by_month(region='BELG', year='2014')
+	x = ostbs_by_month(2013)
 	print(dumps(x, ensure_ascii=0, indent=2))
 
 
