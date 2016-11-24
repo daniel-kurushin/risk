@@ -1,4 +1,5 @@
 from openpyxl import load_workbook
+from docx import Document
 from json import dumps
 
 def test():
@@ -81,8 +82,69 @@ def get_region_salary(_file = 'data/t4.xlsx'):
 				resres.update({_date:n1})
 			res.update({str(region.value).strip():resres})
 	return res
-		
 
+def get_region_income(_file = 'data/R_04-1.docx'):
+	""" Среднедушевые Денежные Доходы Населения """
+	doc = Document(_file)
+	T = [doc.tables[2], doc.tables[3]]
+	res = dict()
+	n = 0
+	for t in T:
+		if n == 0:
+			_min, _max = 1, 10
+			n = 1
+		else:
+			_min, _max = 1, 10
+
+		for row in range(_min, _max):
+			try:
+				_ = t.cell(row,0).text.upper().index("федера".upper())
+			except ValueError:
+				resres = dict()
+				for col in range(1, 6):
+					year = t.cell(0,col).text
+					_date = '31.12.%s' % (year)
+					try:
+						n1 = int(t.cell(row,col).text)
+					except Exception:
+						n1 = 0
+					resres.update({_date:n1})
+				res.update({str(t.cell(row,0).text).strip():resres})
+	return(res)
+
+def get_region_rasxod(_file = 'data/R_04-1.docx'):
+	""" Среднедушевые Денежные Доходы Населения """
+	doc = Document(_file)
+	T = [doc.tables[36], doc.tables[37]]
+	res = dict()
+	n = 0
+	for t in T:
+		if n == 0:
+			_min, _max = 1, 10
+			n = 1
+		else:
+			_min, _max = 1, 10
+			
+		for row in range(_min, _max):
+			try:
+				_ = t.cell(row,0).text.upper().index("федера".upper())
+			except ValueError:
+				resres = dict()
+				for col in range(1, 6):
+					year = t.cell(0,col).text
+					_date = '31.12.%s' % (year)
+					try:
+						n1 = int(t.cell(row,col).text)
+					except Exception:
+						n1 = 0
+					resres.update({_date:n1})
+				res.update({str(t.cell(row,0).text).strip():resres})
+	return(res)
 
 if __name__ == '__main__':
-	test()
+	# test()
+	x = get_region_rasxod()
+	print(dumps(x, ensure_ascii=0, indent=2))
+
+
+	# http://www.gks.ru/wps/wcm/connect/rosstat_main/rosstat/ru/statistics/publications/catalog/doc_1138623506156    (Доходы - Р.4.2, Расходы  - Р.4.16)
