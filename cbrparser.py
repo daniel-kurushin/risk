@@ -6,6 +6,8 @@ import sys
 from bs4 import BeautifulSoup
 from json import dumps
 
+from utils import _get_my_name
+
 def crowl(url = 'https://www.cbr.ru/region/'):
 	""" коды регионов """
 	
@@ -30,8 +32,8 @@ def crowl(url = 'https://www.cbr.ru/region/'):
 			_name, _code = get_reg_name_code_from_ahref(li.a)
 			print(_name, file=sys.stderr)
 			res.update({_code:{'name':_name,'subs':regres}})
-		except AttributeError:
-			pass
+		except AttributeError as e:
+			print("Exception '%s' in function '%s'" % (e,_get_my_name()), file=sys.stderr)
 
 	return res
 
@@ -66,7 +68,7 @@ def koif_by_month(year = 2013, region = 'VORO'):
 				'кредитных организаций, головная организация которых находится в другом регионе': n4,}
 			}})
 		except Exception as e:
-			print(e)
+			print("Exception '%s' in function '%s'" % (e,_get_my_name()), file=sys.stderr)
 	return res
 
 
@@ -84,10 +86,10 @@ def krob_by_month(year = 2013, region = 'VORO'):
 	for tr in table('tr'):
 		try:
 			_date = tr('td')[0].contents[0]
-			n1 = int(tr('td')[1].nobr.contents[0].replace(' ','')) * 1000
-			n2 = int(tr('td')[2].nobr.contents[0].replace(' ','')) * 1000
-			n3 = int(tr('td')[3].nobr.contents[0].replace(' ','')) * 1000
-			n4 = int(tr('td')[4].nobr.contents[0].replace(' ','')) * 1000
+			n1 = int(tr('td')[1].nobr.contents[0].replace(' ','') * 1000)
+			n2 = int(tr('td')[2].nobr.contents[0].replace(' ','') * 1000)
+			n3 = int(tr('td')[3].nobr.contents[0].replace(' ','') * 1000)
+			n4 = int(tr('td')[4].nobr.contents[0].replace(' ','') * 1000)
 			res.update({
 			_date:{
 			'Объем кредитов': n1,
@@ -96,7 +98,7 @@ def krob_by_month(year = 2013, region = 'VORO'):
 			'Кредиты физическим лицам': n4,
 			}})
 		except Exception as e:
-			print(e)
+			print("Exception '%s' in function '%s'" % (e,_get_my_name()), file=sys.stderr)
 	return res
 
 def przd_by_month(year = 2013, region = 'VORO'):
@@ -113,9 +115,9 @@ def przd_by_month(year = 2013, region = 'VORO'):
 	for tr in table('tr'):
 		try:
 			_date = tr('td')[0].contents[0]
-			n1 = int(tr('td')[1].nobr.contents[0].replace(' ','')) * 1000
-			n2 = int(tr('td')[3].nobr.contents[0].replace(' ','')) * 1000
-			n3 = int(tr('td')[5].nobr.contents[0].replace(' ','')) * 1000
+			n1 = int(tr('td')[1].nobr.contents[0].replace(' ','') * 1000)
+			n2 = int(tr('td')[3].nobr.contents[0].replace(' ','') * 1000)
+			n3 = int(tr('td')[5].nobr.contents[0].replace(' ','') * 1000)
 			n4 = n1 + n2 + n3
 			res.update({
 			_date:{
@@ -125,7 +127,7 @@ def przd_by_month(year = 2013, region = 'VORO'):
 			'Всего просроченная задолженность': n4,
 			}})
 		except Exception as e:
-			print(e)
+			print("Exception '%s' in function '%s'" % (e,_get_my_name()), file=sys.stderr)
 	return res
 
 def frdko_by_month(year = 2013, region = 'VORO'):
@@ -148,7 +150,7 @@ def frdko_by_month(year = 2013, region = 'VORO'):
 			'Общий объем прибыли/убытков, полученных действующими кредитными организациями': n1,
 			}})
 		except Exception as e:
-			print(e)
+			print("Exception '%s' in function '%s'" % (e,_get_my_name()), file=sys.stderr)
 	return res
 
 def ostbs_by_month(year=2013):
@@ -180,7 +182,7 @@ def ostbs_by_month(year=2013):
 						region:{_date:ostat}
 					})
 			except Exception as e:
-				print(e)
+				print("Exception '%s' in function '%s'" % (e,_get_my_name()), file=sys.stderr)
 	return res
 
 
