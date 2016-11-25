@@ -99,14 +99,14 @@ def summ_frdko(year = 2013, regions = [('VORO',''),('MARI','')]):
 
 def parse():
 	x = get_regions()
-	# koif = summ_koif(x[:4])
-	# print(dumps(koif, ensure_ascii=0, indent=2))
+	koif = summ_koif(x[:4])
+	print(dumps(koif, ensure_ascii=0, indent=2))
 
-	# przd = summ_przd(x[:4])
-	# print(dumps(przd, ensure_ascii=0, indent=2))
+	przd = summ_przd(x[:4])
+	print(dumps(przd, ensure_ascii=0, indent=2))
 
-	# krob = summ_krob(x[:4])
-	# print(dumps(krob, ensure_ascii=0, indent=2))
+	krob = summ_krob(x[:4])
+	print(dumps(krob, ensure_ascii=0, indent=2))
 
 	frdko = summ_frdko(2013)
 	ostb = ostbs_by_month() 
@@ -121,4 +121,3 @@ if __name__ == '__main__':
 	parse()
 
 
-parse
