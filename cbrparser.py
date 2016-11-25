@@ -27,10 +27,10 @@ def crowl(url = 'https://www.cbr.ru/region/'):
 		try:
 			for a in li.ul.findAll('a'):
 				_name, _code = get_reg_name_code_from_ahref(a)
-				print("         ", _name, file=sys.stderr)
+				# print("         ", _name, file=sys.stderr)
 				regres.update({_code:{'name':_name}})
 			_name, _code = get_reg_name_code_from_ahref(li.a)
-			print(_name, file=sys.stderr)
+			# print(_name, file=sys.stderr)
 			res.update({_code:{'name':_name,'subs':regres}})
 		except AttributeError as e:
 			print("Exception '%s' in function '%s'" % (e,_get_my_name()), file=sys.stderr)
@@ -47,7 +47,10 @@ def koif_by_month(year = 2013, region = 'VORO'):
 		if td.text == '01.01.%s' % (year):
 			break
 
-	table = td.parent.parent
+	try:
+		table = td.parent.parent
+	except UnboundLocalError:
+		table = lambda x: []
 	for tr in table('tr'):
 		try:
 			_date = tr('td')[0].contents[0]
@@ -82,14 +85,17 @@ def krob_by_month(year = 2013, region = 'VORO'):
 		if td.text == '01.01.%s' % (year):
 			break
 
-	table = td.parent.parent
+	try:
+		table = td.parent.parent
+	except UnboundLocalError:
+		table = lambda x: []
 	for tr in table('tr'):
 		try:
 			_date = tr('td')[0].contents[0]
-			n1 = int(tr('td')[1].nobr.contents[0].replace(' ','') * 1000)
-			n2 = int(tr('td')[2].nobr.contents[0].replace(' ','') * 1000)
-			n3 = int(tr('td')[3].nobr.contents[0].replace(' ','') * 1000)
-			n4 = int(tr('td')[4].nobr.contents[0].replace(' ','') * 1000)
+			n1 = int(tr('td')[1].nobr.contents[0].replace(' ','')) * 1000
+			n2 = int(tr('td')[2].nobr.contents[0].replace(' ','')) * 1000
+			n3 = int(tr('td')[3].nobr.contents[0].replace(' ','')) * 1000
+			n4 = int(tr('td')[4].nobr.contents[0].replace(' ','')) * 1000
 			res.update({
 			_date:{
 			'Объем кредитов': n1,
@@ -111,13 +117,16 @@ def przd_by_month(year = 2013, region = 'VORO'):
 		if td.text == '01.01.%s' % (year):
 			break
 
-	table = td.parent.parent
+	try:
+		table = td.parent.parent
+	except UnboundLocalError:
+		table = lambda x: []
 	for tr in table('tr'):
 		try:
 			_date = tr('td')[0].contents[0]
-			n1 = int(tr('td')[1].nobr.contents[0].replace(' ','') * 1000)
-			n2 = int(tr('td')[3].nobr.contents[0].replace(' ','') * 1000)
-			n3 = int(tr('td')[5].nobr.contents[0].replace(' ','') * 1000)
+			n1 = int(tr('td')[1].nobr.contents[0].replace(' ','')) * 1000
+			n2 = int(tr('td')[3].nobr.contents[0].replace(' ','')) * 1000
+			n3 = int(tr('td')[5].nobr.contents[0].replace(' ','')) * 1000
 			n4 = n1 + n2 + n3
 			res.update({
 			_date:{
@@ -139,12 +148,15 @@ def frdko_by_month(year = 2013, region = 'VORO'):
 	for td in soup.findAll('td'):
 		if td.text == '01.01.%s' % (year):
 			break
-
-	table = td.parent.parent
+	try:
+		table = td.parent.parent
+	except UnboundLocalError:
+		table = lambda x: []
+	
 	for tr in table('tr'):
 		try:
 			_date = tr('td')[0].contents[0]
-			n1 = int(float(tr('td')[1].nobr.contents[0].replace(',','.')) * 1000000)
+			n1 = int(float(tr('td')[1].nobr.contents[0].replace(' ','').replace(',','.')) * 1000000)
 			res.update({
 			_date:{
 			'Общий объем прибыли/убытков, полученных действующими кредитными организациями': n1,
@@ -191,8 +203,8 @@ if __name__ == '__main__':
 	# x = koif_by_month(region='BELG', year='2013')
 	# x = krob_by_month(region='BELG', year='2013')
 	# x = przd_by_month(region='BELG', year='2013')
-	# x = frdko_by_month(region='BELG', year='2014')
-	x = ostbs_by_month(2013)
+	x = frdko_by_month(region='BELG', year='2014')
+	# x = ostbs_by_month(2013)
 	print(dumps(x, ensure_ascii=0, indent=2))
 
 
