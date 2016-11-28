@@ -37,12 +37,12 @@ def get_region_vrp(worksheet, years):
 			for col in years.keys():
 				_date = '31.12.%s' % (years[col])
 				try:
-					n1   = int(worksheet['%s%s' % (col,row)].value)
+					n1   = int(worksheet['%s%s' % (col,row)].value * 1000000)
 				except ValueError:
 					n1   = 0
 				except TypeError:					
 					n1   = 0
-				resres.update({_date:int(n1 * 1000000)})
+				resres.update({_date:n1})
 			res.update({str(region.value).strip():resres})
 	return res
 
