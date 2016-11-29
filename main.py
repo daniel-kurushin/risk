@@ -67,7 +67,8 @@ def compare_names(n1, n2):
 
 def get_code_by_name(regions, name):
 	for region in regions:
-		if compare_names(region[1], name) >= 1/2:
+		_ = compare_names(region[1], name)
+		if _ >= 1/2:
 			return region[0]
 	raise ValueError('Name %s not found' % name)
 
@@ -168,9 +169,65 @@ def summ_osts(year, regions):
 			pass
 	return res
 
+def filter_vrp(regions, year, vrp):
+	res = {}
+	for reg in vrp:
+		try:
+			code = get_code_by_name(regions, reg)
+			value = vrp[reg]['31.12.%s' % year]
+			res.update({code:{'Валовый региональный продукт': value}})
+		except ValueError:
+			pass
+	return res
+
+def filter_salary(year, salary):
+	res = {}
+	for reg in salary:
+		try:
+			code = get_code_by_name(regions, reg)
+			value = salary[reg]['31.12.%s' % year]
+			res.update({code:{'Среднемесячная заработная плата': value}})
+		except ValueError:
+			pass
+	return res
+
+def filter_income(year, income):
+	res = {}
+	for reg in income:
+		try:
+			code = get_code_by_name(regions, reg)
+			value = income[reg]['31.12.%s' % year]
+			res.update({code:{'Среднедушевые денежные доходы населения': value}})
+		except ValueError:
+			pass
+	return res
+
+def filter_rasxod(year, rasxod):
+	res = {}
+	for reg in rasxod:
+		try:
+			code = get_code_by_name(regions, reg)
+			value = rasxod[reg]['31.12.%s' % year]
+			res.update({code:{'Среднедушевые денежные расходы населения': value}})
+		except ValueError:
+			pass
+	return res
+
 def parse():
 	x = get_regions()
 	# print(dumps(x, ensure_ascii=0, indent=2))
+	vrp = filter_vrp(regions = x, vrp = get_region_vrp(), year = 2013)
+	print(dumps(vrp, ensure_ascii=0, indent=2))
+
+	salary = filter_salary(regions = x, salary = get_region_salary(), year = 2013)
+	print(dumps(salary, ensure_ascii=0, indent=2))
+
+	income = filter_income(regions = x, income = get_region_income(), year = 2013)
+	print(dumps(income, ensure_ascii=0, indent=2))
+
+	rasxod = filter_rasxod(regions = x, rasxod = get_region_rasxod(), year = 2013)
+	print(dumps(rasxod, ensure_ascii=0, indent=2))
+
 	koif = summ_koif(2013,x)
 	print(dumps(koif, ensure_ascii=0, indent=2))
 
@@ -190,7 +247,7 @@ def parse():
 	for _reg in x:
 		reg = _reg[0]
 		resres = {}
-		for data in [koif,przd,krob,frdko,ostb]:
+		for data in [vrp,salary,income,rasxod,koif,przd,krob,frdko,ostb]:
 			try:
 				for k in data[reg]:
 					resres.update({k:data[reg][k]})

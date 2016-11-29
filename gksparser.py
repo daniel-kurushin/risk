@@ -10,7 +10,7 @@ def test():
 	print(dumps(x, ensure_ascii=0, indent=2))
 
 
-def get_region_vrp(worksheet, years):
+def get_region_vrp(_file = 'data/vrp98-14.xlsx'):
 	""" ВРП по регионам по годам ПЕРЕПИСАТЬ"""
 
 	def get_years(worksheet):
@@ -25,6 +25,8 @@ def get_region_vrp(worksheet, years):
 				break
 		return res
 
+	worksheet = load_workbook(_file).get_sheet_by_name('Лист1')
+	years = get_years(worksheet)
 	_min = 9
 	_max = int(str(worksheet.dimensions).split(':')[1][1:])
 
@@ -113,7 +115,7 @@ def get_region_income(_file = 'data/R_04-1.docx'):
 	return(res)
 
 def get_region_rasxod(_file = 'data/R_04-1.docx'):
-	""" Среднедушевые Денежные Доходы Населения """
+	""" Среднедушевые Денежные расходы Населения """
 	doc = Document(_file)
 	T = [doc.tables[36], doc.tables[37]]
 	res = dict()
@@ -143,6 +145,12 @@ def get_region_rasxod(_file = 'data/R_04-1.docx'):
 
 if __name__ == '__main__':
 	# test()
+	x = get_region_vrp()
+	print(dumps(x, ensure_ascii=0, indent=2))
+	x = get_region_salary()
+	print(dumps(x, ensure_ascii=0, indent=2))
+	x = get_region_income()
+	print(dumps(x, ensure_ascii=0, indent=2))
 	x = get_region_rasxod()
 	print(dumps(x, ensure_ascii=0, indent=2))
 
