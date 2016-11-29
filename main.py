@@ -180,7 +180,7 @@ def filter_vrp(regions, year, vrp):
 			pass
 	return res
 
-def filter_salary(year, salary):
+def filter_salary(regions, year, salary):
 	res = {}
 	for reg in salary:
 		try:
@@ -191,7 +191,7 @@ def filter_salary(year, salary):
 			pass
 	return res
 
-def filter_income(year, income):
+def filter_income(regions, year, income):
 	res = {}
 	for reg in income:
 		try:
@@ -202,7 +202,7 @@ def filter_income(year, income):
 			pass
 	return res
 
-def filter_rasxod(year, rasxod):
+def filter_rasxod(regions, year, rasxod):
 	res = {}
 	for reg in rasxod:
 		try:
