@@ -156,43 +156,49 @@ def summ_frdko(year = 2013, regions = [('VORO',''),('MARI','')]):
 
 	return res
 
-def summ_osts(regions, year):
+def summ_osts(year, regions):
 	ostb = ostbs_by_month()
 	res = {} 
 	for ost in ostb.keys():
-		res.update(
-			{get_code_by_name(regions, ost):{'Остатки бюджета':ostb[ost]['01.12.%s' % year]}}
-		)
+		try:
+			res.update(
+				{get_code_by_name(regions, ost):{'Остатки бюджета':ostb[ost]['01.12.%s' % year]}}
+			)
+		except ValueError:
+			pass
 	return res
 
 def parse():
 	x = get_regions()
 	# print(dumps(x, ensure_ascii=0, indent=2))
-	koif = summ_koif(x[:4])
-	# print(dumps(koif, ensure_ascii=0, indent=2))
+	koif = summ_koif(2013,x)
+	print(dumps(koif, ensure_ascii=0, indent=2))
 
-	przd = summ_przd(x[:4])
-	# print(dumps(przd, ensure_ascii=0, indent=2))
+	przd = summ_przd(2013,x)
+	print(dumps(przd, ensure_ascii=0, indent=2))
 
-	krob = summ_krob(x[:4])
-	# print(dumps(krob, ensure_ascii=0, indent=2))
+	krob = summ_krob(2013,x)
+	print(dumps(krob, ensure_ascii=0, indent=2))
 
-	frdko = summ_frdko(2013)
-	# print(dumps(frdko, ensure_ascii=0, indent=2))
+	frdko = summ_frdko(2013,x)
+	print(dumps(frdko, ensure_ascii=0, indent=2))
 
-	ostb = summ_osts(x, 2013)
-	# print(dumps(ostb, ensure_ascii=0, indent=2))
+	ostb = summ_osts(2013,x)
+	print(dumps(ostb, ensure_ascii=0, indent=2))
 
 	res = {}
-	for reg in x:
-		resres = {reg[0]:{}}
+	for _reg in x:
+		reg = _reg[0]
+		resres = {}
 		for data in [koif,przd,krob,frdko,ostb]:
-			for k in data.keys():
-				resres.update()
 			try:
-				res.update({reg[0]:data[reg[0]]})
+				for k in data[reg]:
+					resres.update({k:data[reg][k]})
 			except KeyError:
-				print("KeyError: (%s, %s)" % reg)
+				print("Exception %s" % reg)
+		res.update(
+			{reg: resres}
+		)
 	print(dumps(res, ensure_ascii=0, indent=2))
 
 if __name__ == '__main__':
