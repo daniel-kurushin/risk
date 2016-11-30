@@ -1,6 +1,9 @@
 from openpyxl import load_workbook
 from docx import Document
 from json import dumps
+from bs4 import BeautifulSoup
+
+import requests
 
 def test():
 	# wb = load_workbook('data/vrp98-14.xlsx')
@@ -143,8 +146,41 @@ def get_region_rasxod(_file = 'data/R_04-1.docx'):
 				res.update({str(t.cell(row,0).text).strip():resres})
 	return(res)
 
+def get_region_population(url = 'http://www.gks.ru/bgd/regl/B14_14p/IssWWW.exe/Stg/d01/02-01.htm'):
+	""" ЧИСЛЕННОСТЬ НАСЕЛЕНИЯ (оценка на конец года) """
+	res = dict()
+	soup = BeautifulSoup(requests.get(url).content)
+
+	table = soup.find('table')
+	rows = table('tr')
+	years = [ int(p.text) for p in rows[0]('p') if p.text[0] == '2' ]
+
+	res = {}
+	for row in rows:
+		try:
+			if len(row('b')) == 0:
+				resres = {}
+				reg = row.td.font.p.text
+
+				i = 0
+				for td in row('td')[1:]:
+					resres.update({'31.12.%s' % years[i]:int(td.text.strip('\n'))*1000})
+					i += 1
+				res.update({reg:resres})
+		except AttributeError:
+			pass
+		except TypeError:
+			pass
+		except ValueError:
+			pass
+	return res
+
 if __name__ == '__main__':
 	# test()
+
+	x = get_region_population()
+	print(dumps(x, ensure_ascii=0, indent=2))
+	exit(0)
 	x = get_region_vrp()
 	print(dumps(x, ensure_ascii=0, indent=2))
 	x = get_region_salary()
