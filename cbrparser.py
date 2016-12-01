@@ -203,7 +203,7 @@ if __name__ == '__main__':
 	# x = koif_by_month(region='BELG', year='2013')
 	# x = krob_by_month(region='BELG', year='2013')
 	# x = przd_by_month(region='BELG', year='2013')
-	# x = frdko_by_month(region='BELG', year='2014')
+	x = frdko_by_month(region='MOSK', year='2014')
 	# x = ostbs_by_month(2013)
 	print(dumps(x, ensure_ascii=0, indent=2))
 
