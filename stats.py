@@ -32,6 +32,8 @@ def test_student(row = []):
 	chi = ss.chi2.ppf(conf_interval, df)  
 	print("chi = {}".format(chi))	
 
+def tes():
+	pass
 def test_(row = [0,1,2,3,4,5,6,7,8,9,]):
 	xs = test_student(row)
 	xe = test_expon(row)

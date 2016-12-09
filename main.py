@@ -331,7 +331,7 @@ def get_best_distr(data, dist_list):
 		h_exp = np.histogram(_, 14)[0]
 		h_exp = h_exp / np.mean(h_exp)
 		print(dist, h_exp, h_obs)
-		res.update({dist:{'X':ss.chisquare(h_obs,h_exp), 'K':ss.kstest(nx, dist)}})
+		res.update({dist:{'X':ss.chisquare(h_obs,h_exp), 'K':ss.kstest(nx, dist, [Sigma])}})
 
 	print(len(nx))
 	hist(nx, 14)
