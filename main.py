@@ -1,6 +1,13 @@
 from cbrparser import *
 from gksparser import *
 from json import dumps
+from student import Student
+
+import math
+import scipy.stats as ss
+import scipy as sp
+import numpy as np
+from matplotlib.pyplot import *	
 
 def _filter(x):
 	try:
@@ -304,11 +311,49 @@ def calcP(data = {}):
 
 	return res
 
-if __name__ == '__main__':
-	parse()
-	# from testdata import testdata
-	# print(calcP(testdata))
+def get_best_distr(data, dist_list):
 
+	s = Student(data)
+	x = np.array([_ for _ in data if abs(s.X - _) < s.Dx * 3 and abs(_) > 1])
+	s = Student(data)
+	nx = (x - s.X)/s.Dx
+	
+	h_obs = np.histogram(nx, 14)[0]
+	h_obs = h_obs / np.mean(h_obs)
+
+	res = {}
+	for dist in dist_list:
+		if dist == 'norm':     _ = ss.norm.rvs(s.Dx, size = 1000)
+		if dist == 'lognorm':  _ = ss.lognorm.rvs(s.Dx, size = 1000)
+		if dist == 'expon':    _ = ss.expon.rvs(s.Dx, size = 1000)
+		if dist == 'uniform':  _ = ss.uniform.rvs(s.Dx, size = 1000)
+		if dist == 'halfnorm': _ = ss.halfnorm.rvs(s.Dx, size = 1000)
+		h_exp = np.histogram(_, 14)[0]
+		h_exp = h_exp / np.mean(h_exp)
+		print(dist, h_exp, h_obs)
+		res.update({dist:{'X':ss.chisquare(h_obs,h_exp), 'K':ss.kstest(nx, dist)}})
+
+	print(len(nx))
+	hist(nx, 14)
+	show()
+	
+	return res
+
+if __name__ == '__main__':
+	# parse()
+	from testdata import testdata
+	d = []
+	P = calcP(testdata)
+	for reg in P.keys():
+		try:
+			d += [float(P[reg][4])]
+		except ValueError: 
+			d += [0]
+		except IndexError: 
+			d += [0]
+
+	r = get_best_distr(d, ['norm', 'expon', 'uniform', 'halfnorm'])
+	print(r, d)
 
 
   # "TIV_R": {
