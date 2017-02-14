@@ -192,3 +192,7 @@ if __name__ == '__main__':
 
 
 	# http://www.gks.ru/wps/wcm/connect/rosstat_main/rosstat/ru/statistics/publications/catalog/doc_1138623506156    (Доходы - Р.4.2, Расходы  - Р.4.16)
+
+	# Регион / Показатель / Показатель / Показатель
+	# Дырки показать красным
+	

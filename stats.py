@@ -1,4 +1,11 @@
-# import time
+"""
+Определение параметров кредитного риска
+модуль подбора виде распредеения
+Курушин Д.С.
+Васильева Е.Е.
+Долгова Е.В.
+"""
+
 import math
 import scipy.stats as ss
 import scipy as sp
@@ -34,6 +41,7 @@ def test_student(row = []):
 
 def tes():
 	pass
+
 def test_(row = [0,1,2,3,4,5,6,7,8,9,]):
 	xs = test_student(row)
 	xe = test_expon(row)

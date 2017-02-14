@@ -200,6 +200,8 @@ def ostbs_by_month(year=2013):
 
 if __name__ == '__main__':
 	x = crowl('https://www.cbr.ru/region/')
+	print(dumps(x, ensure_ascii=0, indent=2))
+	exit(1)
 	# x = koif_by_month(region='BELG', year='2013')
 	# x = krob_by_month(region='BELG', year='2013')
 	# x = przd_by_month(region='BELG', year='2013')
@@ -207,4 +209,11 @@ if __name__ == '__main__':
 	# x = ostbs_by_month(2013)
 	print(dumps(x, ensure_ascii=0, indent=2))
 
+	# Регион / Показатель / Показатель / Показатель
+	# Дырки показать красным
+	# дать выбор месяца
 
+	# Потом объединить
+	# Показать дедубликацию регионов.
+
+	# 

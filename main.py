@@ -1,3 +1,11 @@
+"""
+Определение параметров кредитного риска
+модуль обработки данных по регионам
+Курушин Д.С.
+Васильева Е.Е.
+Долгова Е.В.
+"""
+
 from cbrparser import *
 from gksparser import *
 from json import dumps
@@ -323,15 +331,15 @@ def get_best_distr(data, dist_list):
 
 	res = {}
 	for dist in dist_list:
-		if dist == 'norm':     _ = ss.norm.rvs(s.Dx, size = 1000)
-		if dist == 'lognorm':  _ = ss.lognorm.rvs(s.Dx, size = 1000)
-		if dist == 'expon':    _ = ss.expon.rvs(s.Dx, size = 1000)
-		if dist == 'uniform':  _ = ss.uniform.rvs(s.Dx, size = 1000)
-		if dist == 'halfnorm': _ = ss.halfnorm.rvs(s.Dx, size = 1000)
+		if dist == 'norm':     _ = ss.norm.rvs(s.Dx, size = 10000)
+		if dist == 'lognorm':  _ = ss.lognorm.rvs(s.Dx, size = 10000)
+		if dist == 'expon':    _ = ss.expon.rvs(s.Dx, size = 10000)
+		if dist == 'uniform':  _ = ss.uniform.rvs(s.Dx, size = 10000)
+		if dist == 'halfnorm': _ = ss.halfnorm.rvs(s.Dx, size = 10000)
 		h_exp = np.histogram(_, 14)[0]
 		h_exp = h_exp / np.mean(h_exp)
 		print(dist, h_exp, h_obs)
-		res.update({dist:{'X':ss.chisquare(h_obs,h_exp), 'K':ss.kstest(nx, dist, [Sigma])}})
+		res.update({dist:{'X':ss.chisquare(h_obs,h_exp), 'K':ss.kstest(nx, dist, [s.Dx])}})
 
 	print(len(nx))
 	hist(nx, 14)
@@ -352,9 +360,28 @@ if __name__ == '__main__':
 		except IndexError: 
 			d += [0]
 
-	r = get_best_distr(d, ['norm', 'expon', 'uniform', 'halfnorm'])
+	r = get_best_distr(d, ['norm', 'expon', 'uniform', 'lognorm', 'halfnorm'])
 	print(r, d)
 
+	# Результат усреднения
+	# Регион / Показатель / Показатель
+	# За год.
+
+	# Результат расчета Параметров
+	# Регион / Параметр / Параметр
+	# За год.
+
+	# Определение закона распределения параметров
+	# Показать графики и выбрать закон
+	
+	# Результат нечеткого преобразования
+	# Регион В ВС С НС Н
+
+	# Результат расчета оценки 
+	# Регион / CL / BL / R
+	# За год
+
+	# 3D
 
   # "TIV_R": {
   #   "Среднемесячная заработная плата": 25087,
