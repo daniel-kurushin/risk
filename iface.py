@@ -7,6 +7,8 @@ from interface.parser import ParserInterface
 
 from integrate import get_regions, enum_parameters
 
+from testdata import testdata
+
 class MainWindow(tk.Tk):
 	pages = {}
 	nb = None
@@ -35,6 +37,7 @@ class MainWindow(tk.Tk):
 				_ = ParserInterface(p)
 				_.get_region_list = get_regions
 				_.get_parameter_list = enum_parameters
+				_.data = testdata
 			if t == '_Дедубликация данных': ParserInterface(p)
 
 def demo():
