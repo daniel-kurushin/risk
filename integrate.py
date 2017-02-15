@@ -37,18 +37,16 @@ def get_regions():
 
 def enum_parameters():
 	return [
-		"Количество филиалов",
-		"Объем кредитов",
-		"Просроченная задолженность"	,
-		"Остатки бюджета",
-		"Валовый региональный продукт",
-		"Количество организаций",
-		"Среднедушевые денежные расходы населения",
-		"Общий объем прибыли/убытков",
+		"ВРП",
 		"Численность населения",
-		"Среднедушевые денежные доходы населения",
-		"Среднемесячная заработная плата",
-		"Всего организаций",
+		"Объем кредитов",
+		"Просроченная зад-ть",
+		"КО + фил.",
+		"Общий объем П/У",
+		"Остатки бюджета на р/с",
+		"Среднедуш. доходы",
+		"Среднедуш. расходы",
+		"Среднемес. з/п",
 	]
 
 
@@ -93,7 +91,12 @@ def compare_names(n1, n2):
 			n += k
 		m += k
 
-	return n / m
+	try:
+		res = n / m
+	except ZeroDivisionError:
+		res = 0
+
+	return 0
 
 def get_code_by_name(regions, name):
 	for region in regions:
@@ -132,6 +135,7 @@ def summ_koif(year = 2013, regions = [('VORO',''),('MARI','')]):
 			n3 = 0
 		
 		res.update({r[0]:{'Количество филиалов':n2,'Количество организаций':n3,'Всего организаций':n1}})
+		# res.update({r[0]:{'Кол-во фил.':n2,'Кол-во КО':n3,'КО + фил.':n1}})
 	return res
 
 def summ_przd(year = 2013, regions = [('VORO',''),('MARI','')]):
@@ -149,7 +153,7 @@ def summ_przd(year = 2013, regions = [('VORO',''),('MARI','')]):
 		except ZeroDivisionError:
 			n1 = 0
 		
-		res.update({r[0]:{"Просроченная задолженность":n1}})
+		res.update({r[0]:{"Просроченная зад-ть":n1}})
 
 	return res
 
@@ -190,9 +194,9 @@ def summ_frdko(year = 2013, regions = [('VORO',''),('MARI','')]):
 					continue
 		
 		try:
-			res.update({r[0]:{"Общий объем прибыли/убытков":oo}})
+			res.update({r[0]:{"Общий объем П/У":oo}})
 		except NameError:
-			res.update({r[0]:{"Общий объем прибыли/убытков":0}})
+			res.update({r[0]:{"Общий объем П/У":0}})
 
 	return res
 
@@ -202,7 +206,7 @@ def summ_osts(year, regions):
 	for ost in ostb.keys():
 		try:
 			res.update(
-				{get_code_by_name(regions, ost):{'Остатки бюджета':ostb[ost]['01.12.%s' % year]}}
+				{get_code_by_name(regions, ost):{'Остатки бюджета на р/с':ostb[ost]['01.12.%s' % year]}}
 			)
 		except ValueError:
 			pass
@@ -214,7 +218,7 @@ def filter_vrp(regions, year, vrp):
 		try:
 			code = get_code_by_name(regions, reg)
 			value = vrp[reg]['31.12.%s' % year]
-			res.update({code:{'Валовый региональный продукт': value}})
+			res.update({code:{'ВРП': value}})
 		except ValueError:
 			pass
 	return res
@@ -225,7 +229,7 @@ def filter_salary(regions, year, salary):
 		try:
 			code = get_code_by_name(regions, reg)
 			value = salary[reg]['31.12.%s' % year]
-			res.update({code:{'Среднемесячная заработная плата': value}})
+			res.update({code:{'Среднемес. з/п': value}})
 		except ValueError:
 			pass
 	return res
@@ -236,7 +240,7 @@ def filter_income(regions, year, income):
 		try:
 			code = get_code_by_name(regions, reg)
 			value = income[reg]['31.12.%s' % year]
-			res.update({code:{'Среднедушевые денежные доходы населения': value}})
+			res.update({code:{'Среднедуш. доходы': value}})
 		except ValueError:
 			pass
 	return res
@@ -258,46 +262,26 @@ def filter_rasxod(regions, year, rasxod):
 		try:
 			code = get_code_by_name(regions, reg)
 			value = rasxod[reg]['31.12.%s' % year]
-			res.update({code:{'Среднедушевые денежные расходы населения': value}})
+			res.update({code:{'Среднедуш. расходы': value}})
 		except ValueError:
 			pass
 	return res
 
-def parse():
-	x = get_regions()
-	# print(dumps(x, ensure_ascii=0, indent=2))
-	frdko = summ_frdko(2013,x)
-	print(dumps(frdko, ensure_ascii=0, indent=2))
+def integrate(year = 2013, regions = [('VORO',''),('MARI','')]):
 
-	popl = filter_population(regions = x, population = get_region_population(), year = 2013)
-	print(dumps(popl, ensure_ascii=0, indent=2))
-
-	vrp = filter_vrp(regions = x, vrp = get_region_vrp(), year = 2013)
-	print(dumps(vrp, ensure_ascii=0, indent=2))
-
-	salary = filter_salary(regions = x, salary = get_region_salary(), year = 2013)
-	print(dumps(salary, ensure_ascii=0, indent=2))
-
-	income = filter_income(regions = x, income = get_region_income(), year = 2013)
-	print(dumps(income, ensure_ascii=0, indent=2))
-
-	rasxod = filter_rasxod(regions = x, rasxod = get_region_rasxod(), year = 2013)
-	print(dumps(rasxod, ensure_ascii=0, indent=2))
-
-	koif = summ_koif(2013,x)
-	print(dumps(koif, ensure_ascii=0, indent=2))
-
-	przd = summ_przd(2013,x)
-	print(dumps(przd, ensure_ascii=0, indent=2))
-
-	krob = summ_krob(2013,x)
-	print(dumps(krob, ensure_ascii=0, indent=2))
-
-	ostb = summ_osts(2013,x)
-	print(dumps(ostb, ensure_ascii=0, indent=2))
+	frdko = summ_frdko(year,regions)
+	popl = filter_population(regions = regions, population = get_region_population(), year = year)
+	vrp = filter_vrp(regions = regions, vrp = get_region_vrp(), year = year)
+	salary = filter_salary(regions = regions, salary = get_region_salary(), year = year)
+	income = filter_income(regions = regions, income = get_region_income(), year = year)
+	rasxod = filter_rasxod(regions = regions, rasxod = get_region_rasxod(), year = year)
+	koif = summ_koif(year,regions)
+	przd = summ_przd(year,regions)
+	krob = summ_krob(year,regions)
+	ostb = summ_osts(year,regions)
 
 	res = {}
-	for _reg in x:
+	for _reg in regions:
 		reg = _reg[0]
 		resres = {}
 		for data in [popl,vrp,salary,income,rasxod,koif,przd,krob,frdko,ostb]:
@@ -309,23 +293,24 @@ def parse():
 		res.update(
 			{reg: resres}
 		)
-	print(dumps(res, ensure_ascii=0, indent=2))
+
+	return res
 
 def calcP(data = {}):
 	res = {}
 	for reg in data.keys():
 		x = data[reg]
-		try:
-			P = [0,x["Объем кредитов"] / x["Валовый региональный продукт"],
-				   x["Объем кредитов"] / x["Всего организаций"],
-				   x["Объем кредитов"] / (x["Общий объем прибыли/убытков"] / 12),
-				  (x["Остатки бюджета"] / 12) / (x["Численность населения"] / 1000),
-				  (x["Среднедушевые денежные доходы населения"] - x["Среднедушевые денежные расходы населения"]) / x["Среднемесячная заработная плата"],
-				   x["Просроченная задолженность"] / x["Объем кредитов"],
-				   x["Просроченная задолженность"] / x["Валовый региональный продукт"],
-				   x["Просроченная задолженность"] / x["Всего организаций"],
-				   x["Просроченная задолженность"] / (x["Численность населения"] / 1000),
-				   x["Общий объем прибыли/убытков"] / x["Всего организаций"],]
+		try: 
+			P = [0,x["Объем кредитов"] / x["ВРП"],
+				   x["Объем кредитов"] / x["КО + фил."],
+				   x["Объем кредитов"] / (x["Общий объем П/У"] / 12),
+				  (x["Остатки бюджета на р/с"] / 12) / (x["Численность населения"] / 1000),
+				  (x["Среднедуш. доходы"] - x["Среднедуш. расходы"]) / x["Среднемес. з/п"],
+				   x["Просроченная зад-ть"] / x["Объем кредитов"],
+				   x["Просроченная зад-ть"] / x["ВРП"],
+				   x["Просроченная зад-ть"] / x["КО + фил."],
+				   x["Просроченная зад-ть"] / (x["Численность населения"] / 1000),
+				   x["Общий объем П/У"] / x["КО + фил."],]
 		except KeyError as e:
 			P = [0, 'KeyError %s' % e]
 		except ZeroDivisionError as e:
@@ -363,7 +348,9 @@ def get_best_distr(data, dist_list):
 	return res
 
 if __name__ == '__main__':
-	# parse()
+	
+	print(dumps(integrate(), ensure_ascii=0, indent=2))
+	exit(1)
 	from testdata import testdata
 	d = []
 	P = calcP(testdata)
