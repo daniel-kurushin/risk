@@ -5,7 +5,7 @@ from tkinter import *
 from interface.period import PeriodInterface
 from interface.parser import ParserInterface
 
-from main import get_regions
+from main import get_regions, enum_parameters
 
 class MainWindow(tk.Tk):
 	pages = {}
@@ -34,6 +34,7 @@ class MainWindow(tk.Tk):
 			if t == 'Извлечение данных': 
 				_ = ParserInterface(p)
 				_.get_region_list = get_regions
+				_.get_parameter_list = enum_parameters
 			if t == '_Дедубликация данных': ParserInterface(p)
 
 def demo():

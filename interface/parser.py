@@ -50,10 +50,7 @@ class ParserInterface(object):
 		self.table['yscrollcommand'] = vsc.set
 		self.table['xscrollcommand'] = hsc.set
 
-		self.table["columns"]=("A","B","C","D",)
-		for c in self.table["columns"]:
-			self.table.column(c, width = 100)
-			self.table.heading(c, text = c)
+
 
 		self.table.grid(row=0, column=0, sticky='nsew')
 		vsc.grid(row=0, column=1, sticky='ns')
@@ -67,15 +64,27 @@ class ParserInterface(object):
 	def fill_region_list(self):
 		self.regn_select.delete(0, END) 
 		self.code_list = {}
-		for i in self.get_region_list():
+		regn_list = self.get_region_list()
+		regn_list.sort()
+		for i in regn_list:
 			self.code_list.update({i[1]:i[0]})
 			self.regn_select.insert(END, i[1])
 
 	def fill_region_data(self):
+		self.table["columns"] = self.get_parameter_list()
+		for c in self.table["columns"]:
+			self.table.heading(c, text = c)
+
 		self.table.delete(*self.table.get_children())
-		for i in self.regn_select.curselection():
-			code = self.code_list[self.regn_select.get(i)]
-			self.table.insert("" , 0, text = code)
+		selection = self.regn_select.curselection()
+		# selection.reverse()
+		for i in selection:
+			regn = self.regn_select.get(i)
+			code = self.code_list[regn]
+			values = []
+			# for x in self.table["columns"]:
+			# 	if x == "Количество филиалов": v = self.get_koif_by_month()
+			self.table.insert("" , END, text = regn, values = values)
 
 if __name__ == '__main__':
 	root = Tk()
