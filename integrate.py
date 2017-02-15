@@ -348,9 +348,9 @@ def get_best_distr(data, dist_list):
 	return res
 
 if __name__ == '__main__':
-	
-	print(dumps(integrate(), ensure_ascii=0, indent=2))
+	print(dumps(get_regions(), ensure_ascii=0, indent=2))
 	exit(1)
+	print(dumps(integrate(), ensure_ascii=0, indent=2))
 	from testdata import testdata
 	d = []
 	P = calcP(testdata)
