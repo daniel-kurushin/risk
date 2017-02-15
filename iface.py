@@ -5,7 +5,7 @@ from tkinter import *
 from interface.period import PeriodInterface
 from interface.parser import ParserInterface
 
-from main import get_regions, enum_parameters
+from integrate import get_regions, enum_parameters
 
 class MainWindow(tk.Tk):
 	pages = {}
@@ -16,7 +16,7 @@ class MainWindow(tk.Tk):
 		self.title("Определение параметров кредитного риска")
 		self.nb = ttk.Notebook(self)
 		self.create_pages()
-		self.fill_pages() # ["Определение периода", "Извлечение данных", "Дедубликация данных"
+		self.fill_pages() # ["Определение периода", "Извлечение данных", "Параметры риска", "-->Сырые данные", 
 
 		self.nb.pack(expand=1, fill="both")
 
