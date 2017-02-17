@@ -8,7 +8,7 @@ from json import dumps
 
 from utils import _get_my_name
 
-percent_done = 0
+percent_done = 0.0
 
 def progress(value = 'reset'):
 	global percent_done
