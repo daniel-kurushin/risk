@@ -8,9 +8,18 @@ from json import dumps
 
 from utils import _get_my_name
 
+percent_done = 0
+
+def progress(value = 'reset'):
+	global percent_done
+	if value == 'reset':
+		percent_done = 0
+	else:
+		percent_done += value
+
 def crowl(url = 'https://www.cbr.ru/region/'):
 	""" коды регионов """
-	
+
 	def get_reg_name_code_from_ahref(a):
 		_name = a.contents[0]
 		try:
@@ -19,10 +28,14 @@ def crowl(url = 'https://www.cbr.ru/region/'):
 			_code = ''
 		return(_name, _code)
 
+	progress()
 	res = dict()
 	soup = BeautifulSoup(requests.get(url).content)
+	progress(10)
 
-	for li in soup.find('ul', {"class" : "nodash without_dash regions_okrug"}).findAll('li',recursive=False):
+	_ = soup.find('ul', {"class" : "nodash without_dash regions_okrug"}).findAll('li',recursive=False)
+	step = 90 / len(_)
+	for li in _:
 		regres = dict()
 		try:
 			for a in li.ul.findAll('a'):
@@ -34,6 +47,8 @@ def crowl(url = 'https://www.cbr.ru/region/'):
 			res.update({_code:{'name':_name,'subs':regres}})
 		except AttributeError as e:
 			print("Exception '%s' in function '%s'" % (e,_get_my_name()), file=sys.stderr)
+
+		progress(step)
 
 	return res
 
@@ -110,7 +125,7 @@ def krob_by_month(year = 2013, region = 'VORO'):
 def przd_by_month(year = 2013, region = 'VORO'):
 	""" Данные о просроченной задолженности по кредитам, депозитам и прочим размещенным средствам """
 	url = 'https://www.cbr.ru/region/IndicatorTable?region=%s&indicator=Tab30.2&year=%s' % (region, year)
-           
+
 	res = dict()
 	soup = BeautifulSoup(requests.get(url).content)
 	for td in soup.findAll('td'):
@@ -152,7 +167,7 @@ def frdko_by_month(year = 2013, region = 'VORO'):
 		table = td.parent.parent
 	except UnboundLocalError:
 		table = lambda x: []
-	
+
 	for tr in table('tr'):
 		try:
 			_date = tr('td')[0].contents[0]
@@ -184,9 +199,9 @@ def ostbs_by_month(year=2013):
 				region = tr('td')[0].contents[0]
 				if region.upper() != region:
 					ostat  = int(
-						float(tr('td')[1].contents[0].replace(',','.').replace(' ','')) + 
-						float(tr('td')[2].contents[0].replace(',','.').replace(' ','')) + 
-						float(tr('td')[3].contents[0].replace(',','.').replace(' ','')) + 
+						float(tr('td')[1].contents[0].replace(',','.').replace(' ','')) +
+						float(tr('td')[2].contents[0].replace(',','.').replace(' ','')) +
+						float(tr('td')[3].contents[0].replace(',','.').replace(' ','')) +
 						float(tr('td')[4].contents[0].replace(',','.').replace(' ',''))
 					) * 1000000
 					_date = '01.%s.%s' % (month, year)
@@ -216,4 +231,4 @@ if __name__ == '__main__':
 	# Потом объединить
 	# Показать дедубликацию регионов.
 
-	# 
+	#
