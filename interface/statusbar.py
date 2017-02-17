@@ -2,12 +2,12 @@ from tkinter import *
 
 class StatusBar(Frame):
 
-    def __init__(self, root, parts = ['one', 'two', 'three']):
+    def __init__(self, root, parts = [('one',0), ('two',2), ('three',3)]):
         super(StatusBar, self).__init__(root, height = 20)
         p = 0
         for part in parts:
-            Label(self, text = part, bd = 2, relief=RIDGE).grid(row = 0, column = p, sticky = 'we')
-            self.columnconfigure(p, weight = 1)
+            Label(self, text = part[0], bd = 2, relief=RIDGE).grid(row = 0, column = p, sticky = 'we')
+            self.columnconfigure(p, weight = part[1])
             p += 1
 
     def pack(self):
