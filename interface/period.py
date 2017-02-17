@@ -9,7 +9,7 @@ class PeriodInterface(object):
 
 		self.label = Label(self.frame, text = 'Выберите год для сбора статистики:')
 		self.scroll = Scrollbar(self.frame, orient=VERTICAL)
-		self.select = Listbox(self.frame, 
+		self.select = Listbox(self.frame,
 			height         = 5,
 			selectmode     = SINGLE,
 			yscrollcommand = self.scroll.set,
@@ -25,6 +25,16 @@ class PeriodInterface(object):
 		self.scroll.pack(side=RIGHT, fill=Y)
 		self.select.pack(side=LEFT, fill=BOTH, expand=1)
 
+		self.select.bind('<ButtonRelease-1>', self.year_selected)
+
+	def year_selected(self, *args):
+		try:
+			self.set_period_value(
+				self.select.get(self.select.curselection())
+			)
+		except TclError:
+			pass
+			
 if __name__ == '__main__':
 	root = Tk()
 	PeriodInterface(root)
