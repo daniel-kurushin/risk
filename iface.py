@@ -2,6 +2,8 @@ from tkinter import ttk
 import tkinter as tk
 from tkinter.scrolledtext import ScrolledText
 from tkinter import *
+from interface.riskparam import RiskParamInterface
+from interface.lawrec import LawRecognitionInterface
 from interface.period import PeriodInterface
 from interface.parser import ParserInterface
 from interface.statusbar import StatusBar
@@ -50,6 +52,10 @@ class MainWindow(tk.Tk):
 				_.get_region_list = get_regions
 				_.get_parameter_list = enum_parameters
 				_.data = testdata
+			if t == "Параметры риска":
+				_ = RiskParamInterface(p)
+			if t == "3акон распределения параметров":
+				_ = LawRecognitionInterface(p)
 			if t == '_Дедубликация данных': ParserInterface(p)
 
 def demo():

@@ -4,13 +4,13 @@ from tkinter import ttk
 from threading import Thread
 from queue import Queue
 
-class ParserInterface(object):
-	data = { 'ALTAI_KR': { "ВРП": 0, "Численность населения": 0, "Объем кредитов": 0, "Просроченная зад-ть": 0, "КО + фил.": 0, "Общий объем П/У": 0, "Остатки бюджета на р/с": 0, "Среднедуш. доходы": 0, "Среднедуш. расходы": 0, "Среднемес. з/п": 0, }, 'NOV-K': { "ВРП": 0, "Численность населения": 0, "Объем кредитов": 0, "Просроченная зад-ть": 0, "КО + фил.": 0, "Общий объем П/У": 0, "Остатки бюджета на р/с": 0, "Среднедуш. доходы": 0, "Среднедуш. расходы": 0, "Среднемес. з/п": 0, }, 'TOM_O': { "ВРП": 0, "Численность населения": 0, "Объем кредитов": 0, "Просроченная зад-ть": 0, "КО + фил.": 0, "Общий объем П/У": 0, "Остатки бюджета на р/с": 0, "Среднедуш. доходы": 0, "Среднедуш. расходы": 0, "Среднемес. з/п": 0, }, 'CHIT_O': { "ВРП": 0, "Численность населения": 0, "Объем кредитов": 0, "Просроченная зад-ть": 0, "КО + фил.": 0, "Общий объем П/У": 0, "Остатки бюджета на р/с": 0, "Среднедуш. доходы": 0, "Среднедуш. расходы": 0, "Среднемес. з/п": 0, }, }
+class RiskParamInterface(object):
+	data = { 'ALTAI_KR': { "P1": 0, "P2": 0, "P3": 0, "P4": 0, "P5": 0, "P6": 0, "P7": 0, "P8": 0, "P9": 0, "P10": 0, }, 'NOV-K': { "P1": 0, "P2": 0, "P3": 0, "P4": 0, "P5": 0, "P6": 0, "P7": 0, "P8": 0, "P9": 0, "P10": 0, }, }
 
 	def __init__(self, frame):
 		self.toplevel = frame
 
-		self.label = Label(self.toplevel, text = 'Выберите нужные регионы и проверьте корректность сбора данных:')
+		self.label = Label(self.toplevel, text = 'Выберите нужные регионы и проверьте корректность полученных данных:')
 		self.label.pack(side=TOP, fill=BOTH, expand=0)
 		self.regn_frame = self.set_regn_frame()
 		self.data_frame = self.set_data_frame()
@@ -20,11 +20,6 @@ class ParserInterface(object):
 
 	def set_regn_frame(self):
 		aframe = Frame(self.toplevel)
-
-		Button(aframe,
-			text = 'Получить список\nрегионов',
-			command = self.fill_region_list,
-		).grid(row = 0, column = 0, columnspan = 2, sticky='ew')
 
 		self.regn_scroll = Scrollbar(aframe, orient=VERTICAL)
 		self.regn_select = Listbox(aframe, selectmode = EXTENDED, yscrollcommand = self.regn_scroll.set,)
@@ -81,7 +76,7 @@ class ParserInterface(object):
 		# Thread(target = self.get_region_list)
 		# while que.empty():
 		# 	pass
-		regn_list = self.get_region_list()
+		regn_list = self.get_region_list()#
 		regn_list.sort()
 		for i in regn_list:
 			self.code_list.update({i[1]:i[0]})
@@ -110,7 +105,7 @@ class ParserInterface(object):
 			self.table.insert("" , END, text = regn, values = values)
 
 	def get_parameter_list(self):
-		return [ "ВРП", "Численность населения", "Объем кредитов", "Просроченная зад-ть", "КО + фил.", "Общий объем П/У", "Остатки бюджета на р/с", "Среднедуш. доходы", "Среднедуш. расходы", "Среднемес. з/п", ]
+		return [ "P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8", "P9", "P10",  ]
 
 	def get_region_list(self):
 		return [ [ "ALTAI_KR", "Алтайский край" ], [ "NOV-K", "Новосибирская область" ], [ "TOM_O", "Томская область" ], [ "CHIT_O", "Забайкальский край" ] ]
