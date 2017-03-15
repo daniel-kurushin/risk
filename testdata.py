@@ -109,7 +109,8 @@ testdata = {
     "Объем кредитов": 44837226250,
     "Просроченная зад-ть": 1628912583,
     "Общий объем П/У": 220000000,
-    "КО + фил.": 16
+    "КО + фил.": 16,
+    "Среднемес. з/п": 0
   },
   "KAMC_O": {
     "Количество филиалов": 8,
@@ -1182,3 +1183,18 @@ testdata = {
     "Среднедуш. расходы": 18202
   }
 }
+
+def test_all(data):
+    example = list(data['VORO'].keys())
+    example.sort()
+    for reg in data.keys():
+        regkeys = list(data[reg].keys())
+        regkeys.sort()
+        if example != regkeys:
+            print(reg)
+            print(example)
+            print(regkeys)
+            print()
+
+if __name__ == '__main__':
+    test_all(testdata)
