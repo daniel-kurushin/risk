@@ -22,7 +22,7 @@ class LawRecognitionInterface(object):
 		bframe = Frame(aframe)
 
 		Label(tframe, text = 'Наименование параметра').grid(row=0, column=0, sticky='nsew')
-		Label(tframe, text = 'Гистограмма'           ).grid(row=0, column=1, sticky='nsew')
+		Label(tframe, text = 'Гистограммы'           ).grid(row=0, column=1, sticky='nsew')
 		Label(tframe, text = 'Выбор закона'          ).grid(row=0, column=2, sticky='nsew')
 		Label(tframe, text = 'Результат'             ).grid(row=0, column=3, sticky='nsew')
 		i = 1
