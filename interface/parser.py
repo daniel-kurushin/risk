@@ -78,10 +78,10 @@ class ParserInterface(object):
 	def fill_region_list(self):
 		self.regn_select.delete(0, END)
 		self.code_list = {}
-		Thread(target = self.get_region_list, args).start()
-		while que.empty():
-			pass
-	    regn_list = que.get()
+		# Thread(target = self.get_region_list)
+		# while que.empty():
+		# 	pass
+		regn_list = self.get_region_list()
 		regn_list.sort()
 		for i in regn_list:
 			self.code_list.update({i[1]:i[0]})
