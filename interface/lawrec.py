@@ -4,7 +4,7 @@ from tkinter import ttk
 from threading import Thread
 from queue import Queue
 
-from vert_scroll_frame import VerticalScrolledFrame
+from interface.vert_scroll_frame import VerticalScrolledFrame
 
 
 class LawRecognitionInterface(object):
