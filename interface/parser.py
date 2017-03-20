@@ -6,6 +6,7 @@ from queue import Queue
 
 class ParserInterface(object):
 	data = { 'ALTAI_KR': { "ВРП": 0, "Численность населения": 0, "Объем кредитов": 0, "Просроченная зад-ть": 0, "КО + фил.": 0, "Общий объем П/У": 0, "Остатки бюджета на р/с": 0, "Среднедуш. доходы": 0, "Среднедуш. расходы": 0, "Среднемес. з/п": 0, }, 'NOV-K': { "ВРП": 0, "Численность населения": 0, "Объем кредитов": 0, "Просроченная зад-ть": 0, "КО + фил.": 0, "Общий объем П/У": 0, "Остатки бюджета на р/с": 0, "Среднедуш. доходы": 0, "Среднедуш. расходы": 0, "Среднемес. з/п": 0, }, 'TOM_O': { "ВРП": 0, "Численность населения": 0, "Объем кредитов": 0, "Просроченная зад-ть": 0, "КО + фил.": 0, "Общий объем П/У": 0, "Остатки бюджета на р/с": 0, "Среднедуш. доходы": 0, "Среднедуш. расходы": 0, "Среднемес. з/п": 0, }, 'CHIT_O': { "ВРП": 0, "Численность населения": 0, "Объем кредитов": 0, "Просроченная зад-ть": 0, "КО + фил.": 0, "Общий объем П/У": 0, "Остатки бюджета на р/с": 0, "Среднедуш. доходы": 0, "Среднедуш. расходы": 0, "Среднемес. з/п": 0, }, }
+	regn_list = []
 
 	def __init__(self, frame):
 		self.toplevel = frame
@@ -81,11 +82,13 @@ class ParserInterface(object):
 		# Thread(target = self.get_region_list)
 		# while que.empty():
 		# 	pass
-		regn_list = self.get_region_list()
-		regn_list.sort()
-		for i in regn_list:
+		self.regn_list = self.get_region_list()
+		self.regn_list.sort()
+		for i in self.regn_list:
 			self.code_list.update({i[1]:i[0]})
 			self.regn_select.insert(END, i[1])
+
+		print(self.regn_list)
 
 	def fill_region_data(self):
 		self.table["columns"] = self.get_parameter_list()
