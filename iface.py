@@ -42,21 +42,19 @@ class MainWindow(tk.Tk):
 			self.pages.update({t:_})
 
 	def fill_pages(self):
-		for t in self.pages.keys():
-			p = self.pages[t]
-			if t == "Определение периода":
-				_ = PeriodInterface(p)
-				_.set_period_value = self.__set_period_value
-			if t == 'Извлечение данных':
-				_ = ParserInterface(p)
-				_.get_region_list = get_regions
-				_.get_parameter_list = enum_parameters
-				_.data = testdata
-			if t == "Параметры риска":
-				_ = RiskParamInterface(p)
-			if t == "3акон распределения параметров":
-				_ = LawRecognitionInterface(p)
-			if t == '_Дедубликация данных': ParserInterface(p)
+		period_interface = PeriodInterface(self.pages["Определение периода"])
+		period_interface.set_period_value = self.__set_period_value
+
+		parser_interface = ParserInterface(self.pages['Извлечение данных'])
+		parser_interface.get_region_list = get_regions
+		parser_interface.get_parameter_list = enum_parameters
+		parser_interface.data = testdata
+
+		risk_interface = RiskParamInterface(self.pages['Параметры риска'])
+		risk_interface.regions = parser_interface.regn_list
+		risk_interface.data = testdata
+
+		law_interface = LawRecognitionInterface(self.pages["3акон распределения параметров"])
 
 def demo():
 	root = MainWindow()
