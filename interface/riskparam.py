@@ -4,6 +4,8 @@ from tkinter import ttk
 from threading import Thread
 from queue import Queue
 
+from vert_scroll_frame import VerticalScrolledFrame
+
 class RiskParamInterface(object):
 	data = { 'ALTAI_KR': { "P1": 0, "P2": 0, "P3": 0, "P4": 0, "P5": 0, "P6": 0, "P7": 0, "P8": 0, "P9": 0, "P10": 0, }, 'NOV-K': { "P1": 0, "P2": 0, "P3": 0, "P4": 0, "P5": 0, "P6": 0, "P7": 0, "P8": 0, "P9": 0, "P10": 0, }, }
 
@@ -112,5 +114,5 @@ class RiskParamInterface(object):
 
 if __name__ == '__main__':
 	root = Tk()
-	ParserInterface(root)
+	RiskParamInterface(root)
 	root.mainloop()

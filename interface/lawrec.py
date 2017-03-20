@@ -4,6 +4,9 @@ from tkinter import ttk
 from threading import Thread
 from queue import Queue
 
+from vert_scroll_frame import VerticalScrolledFrame
+
+
 class LawRecognitionInterface(object):
 	data = { "P1": {"ALTAI_KR":0, "NOV-K":0}, "P2": {"ALTAI_KR":0, "NOV-K":0}, "P3": {"ALTAI_KR":0, "NOV-K":0}, "P4": {"ALTAI_KR":0, "NOV-K":0}, "P5": {"ALTAI_KR":0, "NOV-K":0}, "P6": {"ALTAI_KR":0, "NOV-K":0}, "P7": {"ALTAI_KR":0, "NOV-K":0}, "P8": {"ALTAI_KR":0, "NOV-K":0}, "P9": {"ALTAI_KR":0, "NOV-K":0}, "P10": {"ALTAI_KR":0, "NOV-K":0}, }
 
@@ -18,18 +21,18 @@ class LawRecognitionInterface(object):
 	def set_data_frame(self):
 		aframe = Frame(self.toplevel)
 
-		tframe = Frame(aframe)
+		tframe = VerticalScrolledFrame(aframe)
 		bframe = Frame(aframe)
 
-		Label(tframe, text = 'Наименование параметра').grid(row=0, column=0, sticky='nsew')
-		Label(tframe, text = 'Гистограммы'           ).grid(row=0, column=1, sticky='nsew')
-		Label(tframe, text = 'Выбор закона'          ).grid(row=0, column=2, sticky='nsew')
-		Label(tframe, text = 'Результат'             ).grid(row=0, column=3, sticky='nsew')
+		Label(tframe.interior, text = 'Наименование параметра').grid(row=0, column=0, sticky='nsew')
+		Label(tframe.interior, text = 'Гистограммa'           ).grid(row=0, column=1, sticky='nsew')
+		Label(tframe.interior, text = 'Выбор закона'          ).grid(row=0, column=2, sticky='nsew')
+		Label(tframe.interior, text = 'Результат'             ).grid(row=0, column=3, sticky='nsew')
 		i = 1
 		for par in self.data.keys():
-			Label(tframe, text = par).grid(row=i, column=0, sticky='nsew')
-			Button(tframe, text = 'Определить закон').grid(row=i, column=2, sticky='nsew')
-			_ = Listbox(tframe)
+			Label(tframe.interior, text = par).grid(row=i, column=0, sticky='nsew')
+			Button(tframe.interior, text = 'Определить закон').grid(row=i, column=2, sticky='nsew')
+			_ = Listbox(tframe.interior)
 			for law in ['Нормальный','Логнормальный','Экспоненциальный']:
 				_.insert(END, law)
 			_.grid(row=i, column=3, sticky='nsew')
@@ -39,19 +42,15 @@ class LawRecognitionInterface(object):
 		tframe.pack(side = TOP, expand = 1, fill = BOTH)
 		bframe.pack(side = BOTTOM, fill = BOTH)
 
-		vsc = Scrollbar(tframe, orient='vert')
-
 		Button(bframe, text = 'Выгрузка в Excel').pack(side = RIGHT)
 		Button(bframe, text = 'Печать').pack(side = RIGHT)
 		# Выгрузка в эксель (csv)
 		# Печать
 
-		vsc.grid(row=0, column=4, rowspan=11, sticky='ns')
-		# tframe.rowconfigure(0, weight=1)
-		tframe.columnconfigure(0, weight=1)
-		tframe.columnconfigure(1, weight=1)
-		tframe.columnconfigure(2, weight=1)
-		tframe.columnconfigure(3, weight=1)
+		tframe.interior.columnconfigure(0, weight=1)
+		tframe.interior.columnconfigure(1, weight=1)
+		tframe.interior.columnconfigure(2, weight=1)
+		tframe.interior.columnconfigure(3, weight=1)
 
 		return aframe
 
@@ -98,5 +97,5 @@ class LawRecognitionInterface(object):
 
 if __name__ == '__main__':
 	root = Tk()
-	ParserInterface(root)
+	LawRecognitionInterface(root)
 	root.mainloop()
