@@ -6,10 +6,13 @@ from interface.riskparam import RiskParamInterface
 from interface.lawrec import LawRecognitionInterface
 from interface.period import PeriodInterface
 from interface.parser import ParserInterface
+from interface.graph import GraphInterface
 from interface.statusbar import StatusBar
 from integrate import get_regions, enum_parameters
 
 from testdata import testdata
+
+from parameters import parameters
 
 class MySB(StatusBar):
 
@@ -26,8 +29,15 @@ class MainWindow(tk.Tk):
 		super(MainWindow, self).__init__()
 		self.title("Определение параметров кредитного риска")
 		self.nb = ttk.Notebook(self)
-		self.create_pages(titles = ["Определение периода", "Извлечение данных", "Параметры риска", "3акон распределения параметров", "Hечеткоe преобразованиe", "Результат расчета оценки", "Модель оценки риска", "Сырые данные"])
-		self.fill_pages() # ["Определение периода", "Извлечение данных", "Параметры риска", "Определение закона распределения параметров", "Результат нечеткого преобразования", "Результат расчета оценки", "Модель оценки риска","-->Сырые данные",
+		self.create_pages(titles = ["Определение периода",
+									"Извлечение данных",
+									"Параметры риска",
+									"3акон распределения параметров",
+									"Hечеткоe преобразованиe",
+									"Результат расчета оценки",
+									"Графическое представление",
+									"Сырые данные"])
+		self.fill_pages()
 		self.sb = MySB(self)
 		self.nb.pack(expand=1, fill="both")
 
@@ -51,8 +61,11 @@ class MainWindow(tk.Tk):
 		parser_interface.data = testdata
 
 		risk_interface = RiskParamInterface(self.pages['Параметры риска'])
-		risk_interface.regions = parser_interface.regn_list
+		risk_interface.region_list = parser_interface.selected_list
 		risk_interface.data = testdata
+		risk_interface.parameters = parameters
+
+		graph_interface = GraphInterface(self.pages["Графическое представление"])
 
 		law_interface = LawRecognitionInterface(self.pages["3акон распределения параметров"])
 

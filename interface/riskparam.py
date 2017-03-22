@@ -4,10 +4,14 @@ from tkinter import ttk
 from threading import Thread
 from queue import Queue
 
-from interface.vert_scroll_frame import VerticalScrolledFrame
+try:
+	from interface.vert_scroll_frame import VerticalScrolledFrame
+except ImportError:
+	from vert_scroll_frame import VerticalScrolledFrame
 
 class RiskParamInterface(object):
 	data = { 'ALTAI_KR': { "P1": 0, "P2": 0, "P3": 0, "P4": 0, "P5": 0, "P6": 0, "P7": 0, "P8": 0, "P9": 0, "P10": 0, }, 'NOV-K': { "P1": 0, "P2": 0, "P3": 0, "P4": 0, "P5": 0, "P6": 0, "P7": 0, "P8": 0, "P9": 0, "P10": 0, }, }
+	parameters = {'CL': {'P7': 'Ср.мес. просрочка / ВРП', 'P9': 'Ср.мес. просрочка / Население', 'P10': 'Ср.мес. прибыль КО / Кол-во КО', 'P6': 'Ср.мес. просрочка / Ср.мес. зад-ть', 'P8': 'Ср.мес. просрочка / Кол-во КО и филиалов'}, 'BL': {'P2': 'Кредиты / Кол-во КО и филиалов', 'P5': 'Разность дох-в и расх-в / Раб. нас-е', 'P1': 'Кредиты / ВРП', 'P3': 'Кредиты / Ср.мес. прибыль КО', 'P4': 'Остаток бюдж. ср-в / Население'}}
 
 	def __init__(self, frame):
 		self.toplevel = frame
@@ -19,6 +23,8 @@ class RiskParamInterface(object):
 
 		self.regn_frame.pack(side = LEFT, fill = Y)
 		self.data_frame.pack(side = RIGHT, expand = 1, fill = BOTH)
+
+		self.toplevel.bind('<FocusIn>', self.fill_region_list)
 
 	def set_regn_frame(self):
 		aframe = Frame(self.toplevel)
@@ -58,7 +64,7 @@ class RiskParamInterface(object):
 		self.table['yscrollcommand'] = vsc.set
 		self.table['xscrollcommand'] = hsc.set
 
-		Button(bframe, text = 'Выгрузка в эксель').pack(side = RIGHT)
+		Button(bframe, text = 'Выгрузка в Excel').pack(side = RIGHT)
 		Button(bframe, text = 'Печать').pack(side = RIGHT)
 		# Выгрузка в эксель (csv)
 		# Печать
@@ -72,15 +78,13 @@ class RiskParamInterface(object):
 		return aframe
 
 
-	def fill_region_list(self):
+	def fill_region_list(self, *args):
 		self.regn_select.delete(0, END)
 		self.code_list = {}
 		# Thread(target = self.get_region_list)
 		# while que.empty():
 		# 	pass
-		regn_list = self.get_region_list()#
-		regn_list.sort()
-		for i in regn_list:
+		for i in self.region_list:
 			self.code_list.update({i[1]:i[0]})
 			self.regn_select.insert(END, i[1])
 
@@ -107,7 +111,14 @@ class RiskParamInterface(object):
 			self.table.insert("" , END, text = regn, values = values)
 
 	def get_parameter_list(self):
-		return [ "P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8", "P9", "P10",  ]
+		res = []
+		p = 1
+		for pokaz in ['BL', 'CL']:
+			for x in range(5):
+				res += ['P%s : %s' % (p, self.parameters[pokaz]['P%s' % p])]
+				p += 1
+
+		return res
 
 	def get_region_list(self):
 		return [ [ "ALTAI_KR", "Алтайский край" ], [ "NOV-K", "Новосибирская область" ], [ "TOM_O", "Томская область" ], [ "CHIT_O", "Забайкальский край" ] ]

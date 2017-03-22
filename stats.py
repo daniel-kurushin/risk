@@ -1,6 +1,6 @@
 """
 Определение параметров кредитного риска
-модуль подбора виде распредеения
+модуль подбора вида распределения
 Курушин Д.С.
 Васильева Е.Е.
 Долгова Е.В.
@@ -36,8 +36,8 @@ def test_student(row = []):
 	print("chi_star = {}".format(chi_star))
 	conf_interval = 0.95
 	df = len(bs) - 3
-	chi = ss.chi2.ppf(conf_interval, df)  
-	print("chi = {}".format(chi))	
+	chi = ss.chi2.ppf(conf_interval, df)
+	print("chi = {}".format(chi))
 
 def tes():
 	pass
@@ -49,6 +49,6 @@ def test_(row = [0,1,2,3,4,5,6,7,8,9,]):
 
 if __name__ == '__main__':
 	row = []
-	for _ in range(-5,5):                      
+	for _ in range(-5,5):
     	row += [_]*int(((5-abs(_))*10)**3)
 	test_(row)
