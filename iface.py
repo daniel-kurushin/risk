@@ -69,8 +69,14 @@ class MainWindow(tk.Tk):
 
 		law_interface = LawRecognitionInterface(self.pages["3акон распределения параметров"])
 
+def callback():
+	root.destroy()
+	import sys
+	sys.exit(0)
+
 def demo():
 	root = MainWindow()
+	root.protocol("WM_DELETE_WINDOW", callback)
 	root.mainloop()
 
 if __name__ == "__main__":
