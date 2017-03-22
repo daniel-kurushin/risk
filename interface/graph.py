@@ -60,6 +60,7 @@ class GraphInterface(object):
 
 	def update_position(self,e):
 		x2, y2, _ = proj3d.proj_transform(self.BL[34],self.CL[34],self.R[34], self.ax.get_proj())
+		print(x2, y2)
 		self.label.xy = x2,y2
 		self.label.update_positions(self.canvas.renderer)
 		self.canvas.draw()
