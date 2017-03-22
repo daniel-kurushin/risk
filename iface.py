@@ -70,7 +70,7 @@ class MainWindow(tk.Tk):
 		law_interface = LawRecognitionInterface(self.pages["3акон распределения параметров"])
 
 def callback():
-	root.destroy()
+	# root.destroy()
 	import sys
 	sys.exit(0)
 
