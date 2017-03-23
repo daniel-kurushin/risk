@@ -20,50 +20,82 @@ class GraphInterface(object):
 	CL = np.array([0.2662,0.2571,0.2909,0.2460,0.4271,0.2710,0.4720,0.4476,0.5983,0.5591,0.3611,0.3277,0.5198,0.3242,0.3943,0.3582,0.4380,0.7783,0.4213,0.5093,0.4727,0.7346,0.3486,0.3846,0.4911,0.2825,0.4100,0.5029,0.3492,0.4261,0.2814,0.4835,0.3811,0.1893,0.6237,0.4505,0.5554,0.6490,0.1445,0.3078,0.2534,0.7748,0.1564,0.3204,0.3568,0.4406,0.3205,0.4189,0.2594,0.4114,0.2357,0.4911,0.3596,0.2246,0.2194,0.5219,0.2592,0.4591,0.6126,0.3991,0.4075,0.2889,0.6841,0.1510,0.3563,0.3161,0.3710,0.3549,0.4120,0.3212,0.1661,0.2211,0.2799,0.4480,0.1731,0.1347,0.2208,0.4356,0.0933])
 	R = 0.5 * (CL - BL) + 0.5
 
+	class RegionList(Frame):
+		code_list = {}
+
+		def __init__(self, parent, data = [('XAK_R', 'Республика Хакасия'), ('YAM_NENEC', 'Ямало-Ненецкий автономный округ')]):
+			super().__init__(parent)
+
+			self.regn_scroll = Scrollbar(self, orient=VERTICAL)
+			self.regn_select = Listbox(self, selectmode = EXTENDED, yscrollcommand = self.regn_scroll.set,)
+			self.regn_scroll.config(command = self.regn_select.yview)
+			self.regn_scroll.grid(row = 1, column = 1, sticky='ns')
+			self.regn_select.grid(row = 1, column = 0, sticky='nsew')
+			self.rowconfigure(1, weight = 1)
+
+			data.sort()
+			for i in data:
+				self.code_list.update({i[1]:i[0]})
+				self.regn_select.insert(END, i[1])
+
+
 	def __init__(self, frame):
 		self.toplevel = frame
 
-		fig = pylab.figure()
-		self.ax = fig.add_subplot(111, projection='3d')
+		self.label = Label(self.toplevel, text = 'Выберите регионы и посмотрите кго положение на графике:')
+		self.label.pack(side=TOP, fill=BOTH, expand=0)
 
-		self.ax.plot(self.BL, self.CL, self.R, 'bo', color = (0,0,0), markersize = 2)
+		self.reglist = self.RegionList(self.toplevel)
+		self.reglist.pack(side = LEFT, fill=BOTH,)
 
-		X = np.arange(0, 1, 0.1)
-		Y = np.arange(0, 1, 0.1)
-		X, Y = np.meshgrid(X, Y)
-		Z = 0.5 * (X - Y) + 0.5
+		self.reglist.regn_select.bind('<ButtonRelease-1>', self.on_click)
 
-		self.ax.plot_wireframe(Y, X, Z, color = (0.8,0.8,1.0))
-
-		self.ax.set_xlabel('BL')
-		self.ax.set_ylabel('CL')
-		self.ax.set_zlabel('R')
-
-		x2, y2, _ = proj3d.proj_transform(self.BL[34], self.CL[34], self.R[34], self.ax.get_proj())
-
-		self.label = pylab.annotate(
-		"Республика Ингушетия",
-		xy = (x2, y2), xytext = (-20, 20),
-		textcoords = 'offset points', ha = 'right', va = 'bottom',
-		bbox = dict(boxstyle = 'round,pad=0.5', fc = 'yellow', alpha = 0.5),
-		arrowprops = dict(arrowstyle = '->', connectionstyle = 'arc3,rad=0'))
-
-		self.canvas = FigureCanvasTkAgg(fig, master=self.toplevel)
-		self.canvas.show()
-		self.canvas.get_tk_widget().pack(side=TOP, fill=BOTH, expand=1)
-
-		self.toolbar = NavigationToolbar2TkAgg(self.canvas, self.toplevel)
-		self.toolbar.update()
-		self.canvas._tkcanvas.pack(side=TOP, fill=BOTH, expand=1)
-
-		self.canvas.mpl_connect('button_release_event', self.update_position)
-
-	def update_position(self,e):
-		x2, y2, _ = proj3d.proj_transform(self.BL[34],self.CL[34],self.R[34], self.ax.get_proj())
-		print(x2, y2)
-		self.label.xy = x2,y2
-		self.label.update_positions(self.canvas.renderer)
-		self.canvas.draw()
+	def on_click(self, arg):
+		for i in self.reglist.regn_select.curselection():
+			regn = self.reglist.regn_select.get(i)
+			code = self.reglist.code_list[regn]
+			print (regn, code)
+	# 	fig = pylab.figure()
+	# 	self.ax = fig.add_subplot(111, projection='3d')
+	#
+	# 	self.ax.plot(self.BL, self.CL, self.R, 'bo', color = (0,0,0), markersize = 2)
+	#
+	# 	X = np.arange(0, 1, 0.1)
+	# 	Y = np.arange(0, 1, 0.1)
+	# 	X, Y = np.meshgrid(X, Y)
+	# 	Z = 0.5 * (X - Y) + 0.5
+	#
+	# 	self.ax.plot_wireframe(Y, X, Z, color = (0.8,0.8,1.0))
+	#
+	# 	self.ax.set_xlabel('BL')
+	# 	self.ax.set_ylabel('CL')
+	# 	self.ax.set_zlabel('R')
+	#
+	# 	x2, y2, _ = proj3d.proj_transform(self.BL[34], self.CL[34], self.R[34], self.ax.get_proj())
+	#
+	# 	self.label = pylab.annotate(
+	# 	"Республика Ингушетия",
+	# 	xy = (x2, y2), xytext = (-20, 20),
+	# 	textcoords = 'offset points', ha = 'right', va = 'bottom',
+	# 	bbox = dict(boxstyle = 'round,pad=0.5', fc = 'yellow', alpha = 0.5),
+	# 	arrowprops = dict(arrowstyle = '->', connectionstyle = 'arc3,rad=0'))
+	#
+	# 	self.canvas = FigureCanvasTkAgg(fig, master=self.toplevel)
+	# 	self.canvas.show()
+	# 	self.canvas.get_tk_widget().pack(side=TOP, fill=BOTH, expand=1)
+	#
+	# 	self.toolbar = NavigationToolbar2TkAgg(self.canvas, self.toplevel)
+	# 	self.toolbar.update()
+	# 	self.canvas._tkcanvas.pack(side=TOP, fill=BOTH, expand=1)
+	#
+	# 	self.canvas.mpl_connect('button_release_event', self.update_position)
+	#
+	# def update_position(self,e):
+	# 	x2, y2, _ = proj3d.proj_transform(self.BL[34],self.CL[34],self.R[34], self.ax.get_proj())
+	# 	print(x2, y2)
+	# 	self.label.xy = x2,y2
+	# 	self.label.update_positions(self.canvas.renderer)
+	# 	self.canvas.draw()
 
 
 def callback():

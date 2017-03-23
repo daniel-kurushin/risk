@@ -91,6 +91,8 @@ class ParserInterface(object):
 			self.code_list.update({i[1]:i[0]})
 			self.regn_select.insert(END, i[1])
 
+		
+
 	def fill_region_data(self):
 		self.table["columns"] = self.get_parameter_list()
 		self.table.heading('#0', text = 'Регион')
