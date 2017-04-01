@@ -25,7 +25,7 @@ def create_training_set():
 if __name__ == "__main__":
 	dataset = create_training_set()
 
-	net = buildNetwork(9, 6, 3)# , hiddenclass=SoftmaxLayer) # получено эмпирическим путем тыканья и руганья, без Софтмакса не работает
+	net = buildNetwork(9, 6, 3)# , hiddenclass=SoftmaxLayer) 
 	net.sortModules()
 
 	trainer = BackpropTrainer(net, dataset)
