@@ -1,3 +1,5 @@
+from testdata import perseptrondata
+
 class Neuron(object):
   a =  0.02
   b = -0.04
@@ -8,12 +10,12 @@ class Neuron(object):
     """
     w = self.w[:]
     f = self.__call__
-    for d in D: 
-      x = d[0] 
-      y = d[1] 
+    for d in D:
+      x = d[0]
+      y = d[1]
       for j in range(len(x)):
         self.w[j] += self.a * (y - f(x)) * x[j]
-    return w != self.w 
+    return w != self.w
 
   def __sigma_s(self,x):
     return x
@@ -25,7 +27,7 @@ class Neuron(object):
       return x
     if x > 1:
       return 1
-    
+
   def __sigma_p(self,x):
     if x > 0:
       return 1
@@ -45,9 +47,35 @@ class Neuron(object):
     """
     Создание и обучение
     """
-    self.w = [0]*len(D[0][0]) 
+    self.w = [0]*len(D[0][0])
     self.c = 0
     while self.__learn(D):
       self.c += 1
       if self.c > 10000: return None
 
+
+def main():
+	D = perseptrondata[:10]
+	for x in D:
+		if x[1] == [1,0,0]: x[1] = 10
+		if x[1] == [0,1,0]: x[1] = 20
+		if x[1] == [0,0,1]: x[1] = 30
+
+	f = Neuron(D)
+	print(f.w)
+	for x in D:
+		print(f(x[0]),x[0],x[1])
+
+if __name__ == '__main__':
+	main()
+# [nan, nan, nan, nan, nan, nan, nan, nan, nan]
+# nan [94, 1, 0, 2, 11672, 4456, 0, 649, 195] 10
+# nan [8, 0, 43, 0, 422, 0, 37, 1147, 0] 20
+# nan [78, 0, 0, 5, 1138, 2, 0, 121, 0] 10
+# nan [10, 0, 0, 0, 366, 6, 8, 679, 0] 20
+# nan [8, 0, 0, 0, 167, 0, 0, 754, 0] 20
+# nan [7, 0, 3, 0, 136, 0, 26, 557, 0] 20
+# nan [7, 0, 0, 1, 258, 10, 316, 120, 0] 20
+# nan [14, 0, 0, 0, 246, 5, 2, 323, 0] 20
+# nan [11, 0, 0, 1, 260, 10, 2, 99, 0] 20
+# nan [32, 0, 0, 0, 242, 89, 0, 13, 1] 20
